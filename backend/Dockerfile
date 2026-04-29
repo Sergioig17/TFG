@@ -40,7 +40,10 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-RUN a2dismod mpm_event mpm_worker mpm_prefork || true \
+RUN rm -f /etc/apache2/mods-enabled/mpm_* \
+    && rm -f /etc/apache2/mods-available/mpm_* \
+    && apt-get update \
+    && apt-get install -y apache2 \
     && a2enmod mpm_prefork \
     && a2enmod rewrite headers
 
