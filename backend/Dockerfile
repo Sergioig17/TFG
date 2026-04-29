@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────
-# Base: PHP 8.3 con Apache sobre Debian Bookworm
+# Base: PHP 8.4 con Apache sobre Debian Bookworm
 # ─────────────────────────────────────────────
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 ENV DEBIAN_FRONTEND=noninteractive
 
