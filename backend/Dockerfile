@@ -40,9 +40,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-RUN a2dismod mpm_event mpm_worker \
-    && a2enmod mpm_prefork \
-    && a2enmod rewrite headers
+RUN a2dismod mpm_event mpm_worker mpm_prefork || true
 
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
