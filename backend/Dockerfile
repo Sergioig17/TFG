@@ -37,12 +37,12 @@ ENV AUDIVERIS_JAR=/var/www/html/audiveris/app/audiveris.jar
 ENV AUDIVERIS_DIR=/var/www/html/audiveris/app
 
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf \
-        /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf \
-    && a2enmod rewrite
+RUN a2dismod mpm_event mpm_worker \
+    && a2enmod mpm_prefork \
+    && a2enmod rewrite headers
 
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\

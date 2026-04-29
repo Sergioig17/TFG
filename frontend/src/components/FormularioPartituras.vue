@@ -40,7 +40,7 @@
           required
           class="select-input"
         >
-          <option value="concierto">Concierto (C)</option>
+          <option value="c">Concierto (C)</option>
           <option value="alto">SaxofÃ³n Alto (Eb)</option>
           <option value="tenor">SaxofÃ³n Tenor (Bb)</option>
           <option value="soprano">SaxofÃ³n Soprano (Bb)</option>
@@ -79,6 +79,9 @@
 <script>
 export default {
   name: 'FormularioPartituras',
+  created() {
+    this.apiBaseUrl = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
+  },
   data() {
     return {
       archivo: null,
@@ -86,7 +89,8 @@ export default {
       instrumento: '',
       cargando: false,
       error: '',
-      notas: []
+      notas: [],
+      apiBaseUrl: ''
     };
   },
   methods: {
@@ -111,7 +115,7 @@ export default {
         formData.append('origen', this.origen);
         formData.append('instrumento', this.instrumento);
 
-        const response = await fetch('http://127.0.0.1:8000/procesar', {
+        const response = await fetch(`${this.apiBaseUrl}/api/procesar`, {
           method: 'POST',
           body: formData
         });
