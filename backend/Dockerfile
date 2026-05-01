@@ -1,9 +1,8 @@
-FROM php:8.4-fpm
+FROM php:8.4-cli
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-    nginx \
     default-jre \
     tesseract-ocr \
     tesseract-ocr-eng \
@@ -43,11 +42,11 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Default fallback port; Railway injects $PORT at runtime
-ENV PORT=80
+ENV PORT=8000
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 80
+EXPOSE 8000
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
