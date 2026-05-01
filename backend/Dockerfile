@@ -1,8 +1,9 @@
-FROM php:8.4-apache
+FROM php:8.4-fpm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
+    nginx \
     default-jre \
     tesseract-ocr \
     tesseract-ocr-eng \
@@ -13,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    libjpeg-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -37,17 +39,15 @@ ENV AUDIVERIS_JAR=/var/www/html/audiveris/app/audiveris.jar
 ENV AUDIVERIS_DIR=/var/www/html/audiveris/app
 
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-RUN a2dismod mpm_event mpm_worker || true \
-    && rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf \
-              /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf || true \
-    && a2enmod mpm_prefork rewrite headers
-
+# Default fallback port; Railway injects $PORT at runtime
 ENV PORT=80
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
