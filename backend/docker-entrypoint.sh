@@ -4,7 +4,7 @@ set -euo pipefail
 # Configure nginx to listen on $PORT (Railway provides PORT)
 PORT="${PORT:-80}"
 
-cat > /etc/nginx/conf.d/default.conf <<'EOF'
+cat > /etc/nginx/conf.d/default.conf <<EOF
 server {
     listen ${PORT};
     server_name _;
@@ -13,14 +13,14 @@ server {
     index index.php index.html index.htm;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
+        try_files \$uri \$uri/ /index.php?\$query_string;
     }
 
     location ~ \.php$ {
         include fastcgi_params;
         fastcgi_pass 127.0.0.1:9000;
         fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
     }
 
     location ~ /\.ht {
